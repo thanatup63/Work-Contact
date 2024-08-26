@@ -1,0 +1,72 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Worker Contact Management</h2>
+
+  <!-- Search and Filter -->
+  <div class="d-flex justify-content-between mb-3">
+    <input type="text" class="form-control w-50" placeholder="Search by name or phone number" [(ngModel)]="searchText">
+    <select class="form-control w-25" [(ngModel)]="selectedSkill">
+      <option value="">All Skills</option>
+      <option *ngFor="let skill of availableSkills">{{ skill }}</option>
+    </select>
+    <button class="btn btn-primary" (click)="openAddWorkerModal()">Add Worker</button>
+  </div>
+
+  <!-- Worker Table -->
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone Number</th>
+        <th>Skills</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let worker of filteredWorkers">
+        <td>{{ worker.name }}</td>
+        <td>{{ worker.phone }}</td>
+        <td>{{ worker.skills.join(', ') }}</td>
+        <td>
+          <button class="btn btn-warning btn-sm mr-2" (click)="editWorker(worker)">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteWorker(worker)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Add/Edit Worker Modal -->
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show d-block': showModal}" (click)="closeModal($event)">
+  <div class="modal-dialog" role="document" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ editMode ? 'Edit Worker' : 'Add Worker' }}</h5>
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="workerName">Name</label>
+            <input type="text" id="workerName" class="form-control" [(ngModel)]="currentWorker.name" name="name">
+          </div>
+          <div class="form-group">
+            <label for="workerPhone">Phone Number</label>
+            <input type="text" id="workerPhone" class="form-control" [(ngModel)]="currentWorker.phone" name="phone">
+          </div>
+          <div class="form-group">
+            <label>Skills</label>
+            <div *ngFor="let skill of availableSkills">
+              <input type="checkbox" [value]="skill" [(ngModel)]="currentWorker.skills" name="skills"> {{ skill }}
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="saveWorker()">{{ editMode ? 'Save Changes' : 'Add Worker' }}</button>
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
